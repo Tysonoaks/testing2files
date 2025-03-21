@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RetroWeb Animations</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(to bottom, #000033, #000066);
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            overflow: hidden;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 48px;
+            text-shadow: 0 0 10px #00ff00;
+            animation: glow 2s infinite;
+        }
+
+        .subtitle {
+            color: #ff00ff;
+            margin: 20px;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+        .menu {
+            margin-top: 40px;
+        }
+
+        .menu-item {
+            color: #00ffff;
+            text-decoration: none;
+            font-size: 24px;
+            margin: 10px;
+            padding: 5px 15px;
+            border: 2px solid #00ffff;
+            animation: borderPulse 1.5s infinite;
+            display: inline-block;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item {
+            border: 1px solid #ffa500;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item:hover {
+            background: rgba(255, 165, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .classified-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            z-index: 1001;
+            width: 80%;
+            max-width: 600px;
+            animation: glitchIn 0.3s forwards;
+        }
+
+        .classified-image {
+            width: 100%;
+            height: auto;
+            filter: contrast(150%) grayscale(100%) brightness(90%);
+            image-rendering: pixelated;
+        }
+
+        .classified-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #ff0000;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        /* Enter button hover effect */
+        .menu-item[data-text="ENTER"]:hover::before {
+            content: "BEGIN JOURNEY";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff0000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.3s forwards;
+        }
+
+        /* Gallery button hover effect */
+        .menu-item[data-text="GALLERY"]:hover::before {
+            content: "VIEW ARTWORK";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffa500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            opacity: 0;
+            animation: pulseAndSpin 0.5s forwards;
+        }
+
+        /* About button hover effect */
+        .menu-item[data-text="ABOUT"]:hover::before {
+            content: "OUR STORY";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff00ff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.3s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 10px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes pulseAndSpin {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 20px) scale(0.5);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translate(-50%, -5px) scale(1.2);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+        }
+
+        @keyframes glitchIn {
+            0% {
+                transform: translate(-50%, -50%) skew(10deg);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(-52%, -48%) skew(-5deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) skew(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #00ff00; }
+            50% { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+            100% { text-shadow: 0 0 10px #00ff00; }
+        }
+
+        @keyframes borderPulse {
+            0% { box-shadow: 0 0 5px #00ffff; }
+            50% { box-shadow: 0 0 20px #00ffff; }
+            100% { box-shadow: 0 0 5px #00ffff; }
+        }
+
+        .classified-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            color: #ff0000;
+            border: 3px solid #ff0000;
+            padding: 5px 15px;
+            font-size: 24px;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 51, 0.95);
+            border: 3px solid #00ffff;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 20px #00ffff;
+            animation: modalOpen 0.5s forwards;
+        }
+
+        .modal-content {
+            color: #00ffff;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ff0000;
+            cursor: pointer;
+            font-size: 24px;
+            border: 2px solid #ff0000;
+            width: 30px;
+            height: 30px;
+            line-height: 26px;
+            text-align: center;
+            animation: glowRed 1.5s infinite;
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes glowRed {
+            0% { box-shadow: 0 0 5px #ff0000; }
+            50% { box-shadow: 0 0 15px #ff0000; }
+            100% { box-shadow: 0 0 5px #ff0000; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="stars" class="stars"></canvas>
+    <div class="container">
+        <h1 class="title">PIXEL PULSE</h1>
+        <div class="subtitle">Welcome to the Digital Frontier</div>
+        <div class="menu">
+            <a href="#" class="menu-item" data-text="ENTER" onclick="openModal('enterModal')">ENTER</a>
+            <a href="#" class="menu-item" data-text="GALLERY" onclick="openModal('galleryModal')">GALLERY</a>
+            <a href="#" class="menu-item" data-text="ABOUT" onclick="openModal('aboutModal')">ABOUT</a>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="enterModal" class="modal">
+        <div class="close-btn" onclick="closeModal('enterModal')">×</div>
+        <div class="modal-content">
+            <h2 style="color: #ff0000; text-shadow: 0 0 10px #ff0000;">SYSTEM INITIALIZING</h2>
+            <div style="margin: 20px 0;">
+                <pre style="color: #00ff00;">
+LOADING... ████████████ 100%
+ACCESSING MAINFRAME...
+WELCOME TO THE MATRIX
+                </pre>
+            </div>
+            <div style="border: 1px solid #ff0000; padding: 10px; margin-top: 20px;">
+                ACCESS GRANTED: LEVEL 1 CLEARANCE
+            </div>
+        </div>
+    </div>
+
+    <div id="galleryModal" class="modal">
+        <div class="close-btn" onclick="closeModal('galleryModal')">×</div>
+        <div class="modal-content">
+            <h2 style="color: #ffa500; text-shadow: 0 0 10px #ffa500;">CLASSIFIED ARCHIVES</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0;">
+                <div class="gallery-item" onclick="showClassified('sat1')">
+                    FILE_SAT847
+                    <div style="color: #ffa500; font-size: 12px;">Location: [REDACTED]</div>
+                </div>
+                <div class="gallery-item" onclick="showClassified('sat2')">
+                    FILE_SAT238
+                    <div style="color: #ffa500; font-size: 12px;">Date: [REDACTED]</div>
+                </div>
+                <div class="gallery-item" onclick="showClassified('sat3')">
+                    FILE_SAT465
+                    <div style="color: #ffa500; font-size: 12px;">Project: [REDACTED]</div>
+                </div>
+                <div class="gallery-item" onclick="showClassified('sat4')">
+                    FILE_SAT091
+                    <div style="color: #ffa500; font-size: 12px;">Status: [REDACTED]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="close-btn" onclick="closeModal('aboutModal')">×</div>
+        <div class="modal-content">
+            <h2 style="color: #ff00ff; text-shadow: 0 0 10px #ff00ff;">SYSTEM INFO</h2>
+            <div style="margin: 20px 0; text-align: left;">
+                <pre style="color: #ff00ff;">
+VERSION: 2.0.24
+STATUS: ONLINE
+UPTIME: 847 DAYS
+MEMORY: 640K
+OS: CYBER-OS
+                </pre>
+            </div>
+            <div style="border: 1px solid #ff00ff; padding: 10px;">
+                ESTABLISHED: 2024
+            </div>
+        </div>
+    </div>
+
+    <!-- Classified Image Modal -->
+    <div id="classifiedModal" class="classified-modal">
+        <div class="close-btn" onclick="closeClassified()" style="z-index: 1002;">×</div>
+        <img id="classifiedImage" class="classified-image" src="" alt="CLASSIFIED">
+        <div class="classified-overlay">
+            TOP SECRET//SI//NOFORN
+            <br>
+            HANDLE VIA COMINT CHANNELS ONLY
+            <br>
+            <span id="coordinates"></span>
+        </div>
+        <div class="classified-stamp">TOP SECRET</div>
+    </div>
+
+    <script>
+        // Star field animation
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.z = Math.random() * 2;
+                this.speed = 0.5 + Math.random() * 2;
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height) {
+                    this.reset();
+                    this.y = 0;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.fillStyle = '#ffffff';
+                ctx.arc(this.x, this.y, this.z, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const stars = Array(150).fill().map(() => new Star());
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 51, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Classified image functions
+        const satelliteImages = {
+            sat1: "https://i.imgur.com/dummyimage1.jpg",
+            sat2: "https://i.imgur.com/dummyimage2.jpg",
+            sat3: "https://i.imgur.com/dummyimage3.jpg",
+            sat4: "https://i.imgur.com/dummyimage4.jpg"
+        };
+
+        function showClassified(imageId) {
+            const modal = document.getElementById('classifiedModal');
+            const img = document.getElementById('classifiedImage');
+            const coords = document.getElementById('coordinates');
+            
+            // Generate random coordinates
+            const lat = (Math.random() * 180 - 90).toFixed(6);
+            const lon = (Math.random() * 360 - 180).toFixed(6);
+            coords.textContent = `LAT: ${lat} LON: ${lon}`;
+            
+            img.src = satelliteImages[imageId];
+            modal.style.display = 'block';
+        }
+
+        function closeClassified() {
+            document.getElementById('classifiedModal').style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal') || event.target.classList.contains('classified-modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html> 
