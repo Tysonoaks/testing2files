@@ -5,7 +5,7 @@ A retro-style web animation project featuring a cyberpunk aesthetic with interac
 ## Features
 
 - Animated starfield background
-- Glowing retro-style text and buttons
+- Glowing retro-styled text and buttons
 - Interactive menu items with hover effects
 - Modal popups with retro terminal aesthetics
 - Classified document viewer with dithered images
@@ -13,7 +13,7 @@ A retro-style web animation project featuring a cyberpunk aesthetic with interac
 
 ## Usage
 
-Simply open `index.html` in a web browser to view the animation. No additional dependencies required.
+Simply open `index.html` in a browser to view the animation. No additional dependencies required.
 
 ## Interaction Guide
 
